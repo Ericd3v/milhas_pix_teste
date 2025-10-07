@@ -5,7 +5,8 @@ export async function fetchRanking(mileValue: number): Promise<RankingItem[]> {
   const query = mileValue.toFixed(2);
 
   try {
-   const res = await fetch(`${import.meta.env.VITE_API_URL}/simulate-ranking?mile_value=${query}`);
+   const baseUrl = import.meta.env.DEV === true ? '/api' : `${import.meta.env.BASE_URL}`
+   const res = await fetch(`${baseUrl}/simulate-ranking?mile_value=${query}`);
 
     if (!res.ok) {
       throw new Error(`${res.status} ${res.statusText}`);
