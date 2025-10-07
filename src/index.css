@@ -1,0 +1,121 @@
+
+:root {
+  --blue: #2196f3;
+  --muted: #9aa5ae;
+  --bg: #f6f8fb;
+}
+* {
+  box-sizing: border-box;
+  font-family: "DM Sans", Inter, Arial, sans-serif;
+}
+
+.app-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.container {
+  flex: 1;
+  padding: 28px;
+}
+.footer {
+  padding: 12px 24px;
+  background: #fff;
+  border-top: 1px solid #eee;
+}
+
+.page {
+  display: flex;
+  gap: 24px;
+}
+.steps {
+  width: 220px;
+}
+.steps ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.steps li {
+  padding: 18px 12px;
+  border-left: 4px solid #e6eef8;
+  margin-bottom: 14px;
+  border-radius: 4px;
+  background: #fff;
+}
+.steps li.active {
+  border-left-color: var(--blue);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
+}
+
+.card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #e6eef8;
+  
+}
+.form-row {
+  display: flex;
+  gap: 16px;
+  align-items: end;
+}
+.form-row label {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.form-vertical label {
+  display: block;
+  margin-bottom: 12px;
+}
+
+.side {
+  width: 260px;
+}
+
+
+.muted {
+  color: var(--muted);
+}
+
+.btn.primary {
+  background: var(--blue);
+  color: white;
+  border-color: var(--blue);
+
+}
+
+@media  (min-width: 768px) {
+  .form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+}
+
+.offers-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.success {
+  text-align: center;
+}
+
+/* small responsive tweaks */
+@media (max-width: 425px) {
+  .page {
+    flex-direction: column;
+  }
+  .steps {
+    width: 100%;
+  }
+  .two-col {
+    flex-direction: column;
+  }
+  .side {
+    width: 100%;
+  }
+}
