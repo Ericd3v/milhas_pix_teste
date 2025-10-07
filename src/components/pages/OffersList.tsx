@@ -75,13 +75,13 @@ export default function OffersList() {
     switch (program) {
       case "TudoAzul":
         return {
-          color: "#40B6E6",          
+          color: "#40B6E6",
         };
       case "Smiles":
         return {
-          color: "#F57921",         
+          color: "#F57921",
         };
-      
+
       default:
         return { color: "black" };
     }
@@ -112,163 +112,160 @@ export default function OffersList() {
         setFiltered(fallback);
       });
   }, []);
+
   // Verifica se é mobile
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
-
     window.addEventListener("resize", handleResize);
-
-
     handleResize();
-
     return () => window.removeEventListener("resize", handleResize);
-    }, [isMobile]);
+  }, []); // <<-- AQUI ESTÁ A CORREÇÃO
 
   // Filtra as ofertas pelo campo de busca
- function handleSearch(query: string) {    
-  setSelectedFilter(""); // <-- reseta o select
+  function handleSearch(query: string) {
+    setSelectedFilter(""); // <-- reseta o select
 
-  if (!query) {
-    setFiltered(offers);
-    return;
+    if (!query) {
+      setFiltered(offers);
+      return;
+    }
+
+    const lower = query.toLowerCase();
+    setFiltered(
+      offers.filter(
+        (o) =>
+          o.loyaltyProgram.toLowerCase().includes(lower) ||
+          o.offerStatus.toLowerCase().includes(lower) ||
+          o.accountLogin.toLowerCase().includes(lower) ||
+          o.offerId.toLowerCase().includes(lower)
+      )
+    );
   }
 
-  const lower = query.toLowerCase();
-  setFiltered(
-    offers.filter(
-      (o) =>
-        o.loyaltyProgram.toLowerCase().includes(lower) ||
-        o.offerStatus.toLowerCase().includes(lower) ||
-        o.accountLogin.toLowerCase().includes(lower) ||
-        o.offerId.toLowerCase().includes(lower)
-    )
-  );
-}
+  function handleFilter(filter: string) {
+    setSelectedFilter(filter);
 
- function handleFilter(filter: string) {
-  setSelectedFilter(filter);
+    if (!filter) {
+      setFiltered(offers);
+      return;
+    }
 
-  if (!filter) {
-    setFiltered(offers);
-    return;
+    const lower = filter.toLowerCase();
+    setFiltered(
+      offers.filter(
+        (o) =>
+          o.offerStatus.toLowerCase() === lower ||
+          o.loyaltyProgram.toLowerCase() === lower
+      )
+    );
   }
 
-  const lower = filter.toLowerCase();
-  setFiltered(
-    offers.filter(
-      (o) =>
-        o.offerStatus.toLowerCase() === lower ||
-        o.loyaltyProgram.toLowerCase() === lower
-    )
-  );
-}
-
- return (
+  return (
     <>
-    {!isMobile ?
-    (<div className="page-offers">
-      <div className="offers-actions">
-        <h2 className="offers-header">Minhas Ofertas</h2>
-        <button className="btn-offers" onClick={() => navigate("/")}>
-          + Nova Oferta
-        </button>
-      </div>
+      {!isMobile ?
+        (<div className="page-offers">
+          <div className="offers-actions">
+            <h2 className="offers-header">Minhas Ofertas</h2>
+            <button className="btn-offers" onClick={() => navigate("/")}>
+              + Nova Oferta
+            </button>
+          </div>
 
-      {/* Campo de busca alinhado acima da lista */}
-        <div className="container-general">
+          {/* Campo de busca alinhado acima da lista */}
+          <div className="container-general">
             <div className="search-offers">
-                <h2 className="offers-text">Todas ofertas</h2>
-                <div className="offers-filters">
-                    <SearchBox placeholder="Login de acesso, ID da oferta..." onSearch={handleSearch}/>
-                <select 
-                    className="offers-select" 
-                    value={selectedFilter} 
-                    onChange={(e) => handleFilter(e.target.value)}>
-                    <option value="">Filtros</option>
-                    <option value="Ativa">Ativa</option>
-                    <option value="Inativo">Inativo</option>
-                    <option value="Em Utilizacao">Em Utilização</option>
-                    <option value="TudoAzul">Tudo Azul</option>
-                    <option value="Smiles">Smiles</option>
+              <h2 className="offers-text">Todas ofertas</h2>
+              <div className="offers-filters">
+                <SearchBox placeholder="Login de acesso, ID da oferta..." onSearch={handleSearch} />
+                <select
+                  className="offers-select"
+                  value={selectedFilter}
+                  onChange={(e) => handleFilter(e.target.value)}>
+                  <option value="">Filtros</option>
+                  <option value="Ativa">Ativa</option>
+                  <option value="Inativo">Inativo</option>
+                  <option value="Em Utilizacao">Em Utilização</option>
+                  <option value="TudoAzul">Tudo Azul</option>
+                  <option value="Smiles">Smiles</option>
                 </select>
 
-                </div>
+              </div>
             </div>
 
             <table className="offers-table">
-                <thead>
+              <thead>
                 <tr>
-                    <th>Programa</th>
-                    <th>Status</th>
-                    <th>Id da oferta</th>
-                    <th>Login</th>
-                    <th>Milhas ofertadas</th>
-                    <th>Data</th>
+                  <th>Programa</th>
+                  <th>Status</th>
+                  <th>Id da oferta</th>
+                  <th>Login</th>
+                  <th>Milhas ofertadas</th>
+                  <th>Data</th>
                 </tr>
-                </thead>
-                <tbody>
+              </thead>
+              <tbody>
                 {filtered.map((o) => (
-                    <tr key={o.offerId}>
+                  <tr key={o.offerId}>
                     <td>
-                        <div className="container-first-column">
-                            <div>
-                                <img
-                                src={handleLogo(o.loyaltyProgram)}
-                                alt={o.loyaltyProgram}                    
-                                />
-                            
-                                <p>
-                                <span style={handleColorText(o.loyaltyProgram)}>{o.loyaltyProgram}</span>
-                                {o.offerType}
-                                </p>
-                            </div>                                
+                      <div className="container-first-column">
+                        <div>
+                          <img
+                            src={handleLogo(o.loyaltyProgram)}
+                            alt={o.loyaltyProgram}
+                          />
+
+                          <p>
+                            <span style={handleColorText(o.loyaltyProgram)}>{o.loyaltyProgram}</span>
+                            {o.offerType}
+                          </p>
                         </div>
-                        
+                      </div>
+
                     </td>
                     <td>
-                        <p
+                      <p
                         className="status-offers"
                         style={handleColorStatus(o.offerStatus)}
-                        >
+                      >
                         {o.offerStatus}
-                        </p>
+                      </p>
                     </td>
                     <td>{o.offerId}</td>
                     <td>{o.accountLogin}</td>
-                    <td>{o.availableQuantity.toLocaleString("pt-BR") }</td>
+                    <td>{o.availableQuantity.toLocaleString("pt-BR")}</td>
                     <td>{new Date(o.createdAt).toLocaleString("pt-BR", {
-                        day: '2-digit',
-                        month:'short',
-                        year:'numeric'
+                      day: '2-digit',
+                      month: 'short',
+                      year: 'numeric'
                     })}</td>
-                    </tr>
+                  </tr>
                 ))}
-                </tbody>
+              </tbody>
             </table>
             {filtered.length == 0 && (
-                <div>
-                    <p>Nenhum dado encontrado</p>
-                </div>
+              <div>
+                <p>Nenhum dado encontrado</p>
+              </div>
             )}
-        </div>
-    </div>)
-         : (
-            <div className="offers-list-mobile">
-        {/* Bloco de Ações (Minhas ofertas e Nova oferta) */}
-        <div className="mobile-actions">
-            <h1 className="mobile-offers-header">Minhas ofertas</h1>
-            <button className="mobile-btn-new-offer" onClick={() => navigate("/")}>
+          </div>
+        </div>)
+        : (
+          <div className="offers-list-mobile">
+            {/* Bloco de Ações (Minhas ofertas e Nova oferta) */}
+            <div className="mobile-actions">
+              <h1 className="mobile-offers-header">Minhas ofertas</h1>
+              <button className="mobile-btn-new-offer" onClick={() => navigate("/")}>
                 + Nova oferta
-            </button>
-        </div>
-        
-        {/* Busca e Filtros */}
-        <div className="mobile-search-filter">
-            <SearchBox placeholder="Login de acesso..." onSearch={handleSearch} />
-            
-            <select 
-                className="mobile-filter-select" 
-                value={selectedFilter} 
+              </button>
+            </div>
+
+            {/* Busca e Filtros */}
+            <div className="mobile-search-filter">
+              <SearchBox placeholder="Login de acesso..." onSearch={handleSearch} />
+
+              <select
+                className="mobile-filter-select"
+                value={selectedFilter}
                 onChange={(e) => handleFilter(e.target.value)}>
                 <option value="" disabled>Filtros</option>
                 <option value="Ativa">Ativa</option>
@@ -276,73 +273,74 @@ export default function OffersList() {
                 <option value="Em Utilizacao">Em Utilização</option>
                 <option value="TudoAzul">Tudo Azul</option>
                 <option value="Smiles">Smiles</option>
-            </select> 
-        </div>
+              </select>
+            </div>
 
-        <div className="mobile-offers-container">
-            {filtered.map((o) => (
+            <div className="mobile-offers-container">
+              {filtered.map((o) => (
                 <div key={o.offerId} className="offer-card-mobile">
-                    {/* Linha 1: Logo, Programa, Tipo de Oferta e Status/Data */}
-                    <div className="card-header-mobile">
-                        <div className="program-info-mobile">
-                            <img 
-                                src={handleLogo(o.loyaltyProgram)}
-                                alt={o.loyaltyProgram}
-                                className="program-logo-mobile"
-                            />
-                            <div className="program-details-mobile">
-                                <span 
-                                    style={handleColorText(o.loyaltyProgram)}
-                                    className="program-name-mobile">
-                                    {o.loyaltyProgram}
-                                </span>
-                                <span className="offer-type-mobile">
-                                    {o.offerType} 
-                                </span>
-                            </div>
-                        </div>
-                        <div className="status-date-mobile">
-                            <p
-                                className="status-pill-mobile"
-                                style={handleColorStatus(o.offerStatus)}>
-                                {/* Usa um span para o ponto azul/verde */}
-                                <span className="status-dot"></span>{o.offerStatus}
-                            </p>
-                            <p className="offer-date-mobile">
-                                {/* Formato: 21 Jun 2025 */}
-                                {new Date(o.createdAt).toLocaleString("pt-BR", {
-                                    day: '2-digit',
-                                    month:'short',
-                                    year:'numeric'
-                                }).replace(" de ", " ")}
-                            </p>
-                        </div>
+                  {/* Linha 1: Logo, Programa, Tipo de Oferta e Status/Data */}
+                  <div className="card-header-mobile">
+                    <div className="program-info-mobile">
+                      <img
+                        src={handleLogo(o.loyaltyProgram)}
+                        alt={o.loyaltyProgram}
+                        className="program-logo-mobile"
+                      />
+                      <div className="program-details-mobile">
+                        <span
+                          style={handleColorText(o.loyaltyProgram)}
+                          className="program-name-mobile">
+                          {o.loyaltyProgram}
+                        </span>
+                        <span className="offer-type-mobile">
+                          {o.offerType}
+                        </span>
+                      </div>
                     </div>
+                    <div className="status-date-mobile">
+                      <p
+                        className="status-pill-mobile"
+                        style={handleColorStatus(o.offerStatus)}>
+                        {/* Usa um span para o ponto azul/verde */}
+                        <span className="status-dot"></span>{o.offerStatus}
+                      </p>
+                      <p className="offer-date-mobile">
+                        {/* Formato: 21 Jun 2025 */}
+                        {new Date(o.createdAt).toLocaleString("pt-BR", {
+                          day: '2-digit',
+                          month: 'short',
+                          year: 'numeric'
+                        }).replace(" de ", " ")}
+                      </p>
+                    </div>
+                  </div>
 
-                    {/* Linhas de detalhe (ID, Login, Milhas) */}
-                    <div className="card-details-row-mobile">
-                        <span className="detail-label">ID da oferta</span>
-                        <span className="detail-value">{o.offerId}</span>
-                    </div>
-                    <div className="card-details-row-mobile">
-                        <span className="detail-label">Login</span>
-                        <span className="detail-value">{o.accountLogin}</span>
-                    </div>
-                    <div className="card-details-row-mobile">
-                        <span className="detail-label">Milhas ofertadas</span>
-                        <span className="detail-value">{o.availableQuantity.toLocaleString("pt-BR")}</span>
-                    </div>
+                  {/* Linhas de detalhe (ID, Login, Milhas) */}
+                  <div className="card-details-row-mobile">
+                    <span className="detail-label">ID da oferta</span>
+                    <span className="detail-value">{o.offerId}</span>
+                  </div>
+                  <div className="card-details-row-mobile">
+                    <span className="detail-label">Login</span>
+                    <span className="detail-value">{o.accountLogin}</span>
+                  </div>
+                  <div className="card-details-row-mobile">
+                    <span className="detail-label">Milhas ofertadas</span>
+                    <span className="detail-value">{o.availableQuantity.toLocaleString("pt-BR")}</span>
+                  </div>
 
                 </div>
-            ))}
+              ))}
 
-            {filtered.length === 0 && (
+              {filtered.length === 0 && (
                 <div className="no-data-mobile">
-                    <p>Nenhum dado encontrado</p>
+                  <p>Nenhum dado encontrado</p>
                 </div>
-            )}
-        </div>
-    </div>
-         )}
+              )}
+            </div>
+          </div>
+        )}
     </>
-  );}
+  );
+}
